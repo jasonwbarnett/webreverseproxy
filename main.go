@@ -32,12 +32,12 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func pullDomainAndPath(a string) (domain string, path string, err error) {
+func pullDomainAndPath(a string) (domain string, path string) {
 	data := strings.Split(a, "/")
 	domain = data[1]
 	path = "/" + strings.Join(data[2:], "/")
 
-	return domain, path, err
+	return domain, path
 }
 
 func convertURLToProxy(config *WebReverseProxyConfiguration, u *url.URL) string {
@@ -54,11 +54,9 @@ func convertURLToProxy(config *WebReverseProxyConfiguration, u *url.URL) string 
 // incoming request is http://$ProxyHost/rubygems.org/downloads/sawyer-0.8.1.gem then
 // the target request will be for https://rubygems.org/downloads/sawyer-0.8.1.gem
 func NewWebReverseProxy(config *WebReverseProxyConfiguration) *httputil.ReverseProxy {
-	var err error
-
 	director := func(req *http.Request) {
 		req.URL.Scheme = "https"
-		req.URL.Host, req.URL.Path, err = pullDomainAndPath(req.URL.Path)
+		req.URL.Host, req.URL.Path = pullDomainAndPath(req.URL.Path)
 		req.Host = req.URL.Host
 		if _, ok := req.Header["User-Agent"]; !ok {
 			// explicitly disable User-Agent so it's not set to default value
