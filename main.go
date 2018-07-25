@@ -20,6 +20,7 @@ func main() {
 			"rubygems.org",
 			"www.rubygems.org",
 			"packages-gitlab-com.s3-accelerate.amazonaws.com",
+			"github.com",
 		},
 		ProxyHost: "127.0.0.1:8080",
 	}
